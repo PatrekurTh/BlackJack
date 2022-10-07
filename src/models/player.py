@@ -15,3 +15,6 @@ class Player:
 
     def clear_hand(self) -> None:
         self.hand.clear()
+
+    def busted(self):
+        return self.hand.value > 21

@@ -1,3 +1,4 @@
+from time import sleep
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -31,6 +32,7 @@ class View(Tk):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         self.geometry("400x400")
+        self.resizable(False, False)
 
     def show_game(self):
         self.game.tkraise()
@@ -39,7 +41,7 @@ class View(Tk):
         self.menu.tkraise()
 
     def update_game(self, player, dealer):
-        self.game.update(player, dealer)
+        self.game.update_game(player, dealer)
 
     def show_message(self, message):
         messagebox.showinfo("", message)

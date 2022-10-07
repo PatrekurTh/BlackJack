@@ -4,8 +4,10 @@ from src.models.player import Player
 
 
 class Model:
-    def new_player(self, name: str) -> Player:
+    @staticmethod
+    def new_player(name: str) -> Player:
         return Player(name=name, credit=1000)
 
-    def new_dealer(self) -> Dealer:
+    @staticmethod
+    def new_dealer() -> Dealer:
         return Dealer()

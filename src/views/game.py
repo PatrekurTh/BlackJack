@@ -44,7 +44,7 @@ class Game(ttk.Frame):
         stand_btn = ttk.Button(player_fr, text="Stand", command=self.stand)
         stand_btn.grid(row=0, column=2)
 
-    def update(self, player, dealer) -> None:
+    def update_game(self, player, dealer) -> None:
         # clear hands
         for widget in self.player_hand_fr.winfo_children():
             widget.destroy()
@@ -53,14 +53,14 @@ class Game(ttk.Frame):
 
         # update hands
         for i, card in enumerate(player.hand):
-            img = PhotoImage(file=card.image)
+            img = PhotoImage(file=card.get_image_path())
             l = ttk.Label(self.player_hand_fr, image=img)
             # for some reason tkinter garbage collects the image if we don't do this
             l.image = img
             l.grid(row=0, column=i)
 
         for i, card in enumerate(dealer.hand):
-            img = PhotoImage(file=card.image)
+            img = PhotoImage(file=card.get_image_path())
             l = ttk.Label(self.dealer_hand_fr, image=img)
             # for some reason tkinter garbage collects the image if we don't do this
             l.image = img
@@ -68,7 +68,8 @@ class Game(ttk.Frame):
 
         # update hand values
         self.player_hand_value.set(player.hand.value)
-        self.dealer_hand_value.set(dealer.hand.value)
+        self.dealer_hand_value.set(
+            sum([card.value for card in dealer.hand if not card.hidden]))
 
     def hit(self):
         self.controller.player_hit()
