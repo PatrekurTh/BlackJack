@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 
 from src.views.game import Game
 from src.views.menu import Menu
@@ -18,6 +19,11 @@ class View(Tk):
         self.game.rowconfigure(1, weight=1)
         self.game.columnconfigure(0, weight=1)
 
+        self.bind("<Return>", lambda e: self.menu.start_game())
+        self.bind("<Escape>", lambda e: self.destroy())
+        self.bind("<s>", lambda e: self.game.stand())
+        self.bind("<h>", lambda e: self.game.hit())
+
         self.show_menu()
 
     def _configure(self) -> Tk:
@@ -34,3 +40,6 @@ class View(Tk):
 
     def update_game(self, player, dealer):
         self.game.update(player, dealer)
+
+    def show_message(self, message):
+        messagebox.showinfo("", message)

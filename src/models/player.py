@@ -12,3 +12,6 @@ class Player:
 
     def hit(self, card: Card) -> None:
         self.hand.add(card)
+
+    def clear_hand(self) -> None:
+        self.hand.clear()

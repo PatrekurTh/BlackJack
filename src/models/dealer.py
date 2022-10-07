@@ -18,3 +18,6 @@ class Dealer:
 
     def hit(self, card: Card):
         self.hand.add(card)
+
+    def clear_hand(self):
+        self.hand.clear()

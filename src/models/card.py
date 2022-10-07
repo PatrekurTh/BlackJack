@@ -3,10 +3,10 @@ class Card:
     def __init__(self, suit, rank, image) -> None:
         self.rank = rank
         self.suit = suit
-        self.value = self._get_value()
+        self.value = self._set_value()
         self.image = image
 
-    def _get_value(self):
+    def _set_value(self):
         if self.rank == "A":
             return 11
         elif self.rank in ["J", "Q", "K"]:
