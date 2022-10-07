@@ -14,11 +14,23 @@ class View(Tk):
         self.menu.grid(row=0, column=0, sticky="nsew")
         self.game: Game = Game(self, controller)
         self.game.grid(row=0, column=0, sticky="nsew")
+        self.game.rowconfigure(0, weight=1)
+        self.game.rowconfigure(1, weight=1)
+        self.game.columnconfigure(0, weight=1)
 
-        self.menu.tkraise()
+        self.show_menu()
 
     def _configure(self) -> Tk:
         self.title("Blackjack")
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        self.geometry("800x600")
+        self.geometry("400x400")
+
+    def show_game(self):
+        self.game.tkraise()
+
+    def show_menu(self):
+        self.menu.tkraise()
+
+    def update_game(self, player, dealer):
+        self.game.update(player, dealer)

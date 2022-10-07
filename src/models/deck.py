@@ -14,12 +14,13 @@ class Deck:
         deck: List = []
         for suit in self.suits:
             for rank in self.ranks:
-                deck.append(Card(suit, rank))
+                image = f"img/cards/card_{suit.lower()}_{rank}.png"
+                deck.append(Card(suit, rank, image))
         return deck
 
     def shuffle_deck(self) -> None:
         import random
         random.shuffle(self.cards)
 
-    def deal_card(self) -> Card:
+    def draw_card(self) -> Card:
         return self.cards.pop()

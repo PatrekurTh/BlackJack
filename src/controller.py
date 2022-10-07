@@ -12,8 +12,9 @@ class Controller:
         self.player: Player = self.model.new_player("Player")
         self.dealer: Dealer = self.model.new_dealer()
 
-    def hit(self):
-        print("Hit")
+    def player_hit(self):
+        self.player.hit(self.dealer.deal())
+        self.view.update_game(self.player, self.dealer)
 
     def stand(self):
         print("Stand")
@@ -24,4 +25,9 @@ class Controller:
     def new_game(self):
         self.dealer.new_deck()
         self.player.bet = 0
-        print("New Game")
+        self.dealer.hit(self.dealer.deal())
+        self.player.hit(self.dealer.deal())
+        self.dealer.hit(self.dealer.deal())
+        self.player.hit(self.dealer.deal())
+        self.view.show_game()
+        self.view.update_game(self.player, self.dealer)

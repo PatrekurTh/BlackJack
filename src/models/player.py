@@ -1,4 +1,5 @@
 from typing import List
+from src.models.hand import Hand
 from src.models.card import Card
 
 
@@ -7,7 +8,7 @@ class Player:
         self.name: str = name
         self.credit: int = credit
         self.bet: int = 0
-        self.hand: List[Card] = []
+        self.hand = Hand()
 
     def hit(self, card: Card) -> None:
-        self.hand.append(card)
+        self.hand.add(card)
