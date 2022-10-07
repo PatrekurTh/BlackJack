@@ -10,11 +10,15 @@ class Controller:
     def __init__(self) -> None:
         self.view: View = View(self)
         self.player: Player = Model.new_player("Player")
+        print("Player: ", self.player)
         self.dealer: Dealer = Model.new_dealer()
 
     def player_hit(self) -> None:
         self.player.hit(self.dealer.deal())
-        self.view.update_game(self.player, self.dealer)
+        if self.player.busted():
+            self.summarize_round()
+        else:
+            self.view.update_game(self.player, self.dealer)
 
     def player_stand(self) -> None:
         self.dealer.hand.show_card()
@@ -35,7 +39,7 @@ class Controller:
             self.dealer_wins()
         else:
             self.push()
-        self.new_game()
+        self.init_game()
 
     def start(self) -> None:
         self.view.mainloop()
@@ -48,14 +52,22 @@ class Controller:
         self.player.hit(self.dealer.deal())
         self.dealer.hit(self.dealer.deal().flip())
         self.player.hit(self.dealer.deal())
-        self.view.show_game()
         self.view.update_game(self.player, self.dealer)
 
     def player_wins(self):
         self.player.credit += self.player.bet * 2
+        self.view.show_message("You win!")
 
     def dealer_wins(self):
-        pass
+        self.view.show_message("Dealer wins!")
 
     def push(self):
-        pass
+        self.view.show_message("Push!")
+
+    def player_bet(self, bet):
+        self.player.bet = bet
+        self.player.credit -= bet
+        self.new_game()
+
+    def init_game(self):
+        self.view.update_game(self.player, self.dealer)

@@ -6,8 +6,6 @@ class Game(ttk.Frame):
     def __init__(self, root, controller):
         super().__init__(root)
         self.controller = controller
-        self.bind("<s>", lambda e: self.stand())
-        self.bind("<h>", lambda e: self.hit())
 
         # dealer
         dealer_fr = Frame(self, bg="green")
@@ -38,11 +36,18 @@ class Game(ttk.Frame):
         hit_btn = ttk.Button(player_fr, text="Hit", command=self.hit)
         hit_btn.grid(row=0, column=0)
         self.player_hand_value = IntVar()
-        self.player_hand_value.set(0)
+        self.player_credit = IntVar()
+        self.player_bet = IntVar()
         ttk.Label(player_fr, textvariable=self.player_hand_value, font=('Arial', 10, "bold"), anchor="center").grid(
             row=1, column=1, sticky="ew", ipadx=10, ipady=10)
+        ttk.Label(player_fr, textvariable=self.player_credit, font=('Arial', 10, "bold"), anchor="center").grid(
+            row=2, column=1, sticky="ew", ipadx=10, ipady=10)
         stand_btn = ttk.Button(player_fr, text="Stand", command=self.stand)
         stand_btn.grid(row=0, column=2)
+        ttk.Entry(player_fr, textvariable=self.player_bet,
+                  width=10).grid(row=1, column=0)
+        ttk.Button(player_fr, text="Bet",
+                   command=self.bet).grid(row=1, column=2)
 
     def update_game(self, player, dealer) -> None:
         # clear hands
@@ -70,9 +75,13 @@ class Game(ttk.Frame):
         self.player_hand_value.set(player.hand.value)
         self.dealer_hand_value.set(
             sum([card.value for card in dealer.hand if not card.hidden]))
+        self.player_credit.set(self.controller.player.credit)
 
     def hit(self):
         self.controller.player_hit()
 
     def stand(self):
         self.controller.player_stand()
+
+    def bet(self):
+        self.controller.player_bet(self.player_bet.get())
