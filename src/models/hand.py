@@ -20,13 +20,17 @@ class Hand:
             if card.hidden:
                 card.flip()
 
-    def compareTo(self, other):
-        if self.value > other.value:
-            return 1
-        elif self.value < other.value:
-            return -1
-        else:
-            return 0
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __gt__(self, other):
+        return self.value > other.value
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __len__(self):
+        return len(self.hand)
 
     def __iter__(self):
         return iter(self.hand)

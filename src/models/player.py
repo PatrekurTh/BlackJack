@@ -18,3 +18,6 @@ class Player:
 
     def busted(self):
         return self.hand.value > 21
+
+    def black_jack(self):
+        return self.hand.value == 21 and len(self.hand) == 2

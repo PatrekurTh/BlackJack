@@ -10,55 +10,61 @@ class Controller:
     def __init__(self) -> None:
         self.view: View = View(self)
         self.player: Player = Model.new_player("Player")
-        print("Player: ", self.player)
         self.dealer: Dealer = Model.new_dealer()
 
     def player_hit(self) -> None:
         self.player.hit(self.dealer.deal())
+        self.view.refresh_view(self.player, self.dealer)
         if self.player.busted():
-            self.summarize_round()
-        else:
-            self.view.update_game(self.player, self.dealer)
+            self.end_round()
 
     def player_stand(self) -> None:
         self.dealer.hand.show_card()
-        self.view.update_game(self.player, self.dealer)
+        self.view.refresh_view(self.player, self.dealer)
         while (self.dealer.hand.value < 17):
             self.dealer.hit(self.dealer.deal())
-            self.view.update_game(self.player, self.dealer)
-        self.summarize_round()
+            self.view.refresh_view(self.player, self.dealer)
+        self.end_round()
 
-    def summarize_round(self) -> None:
+    def end_round(self) -> None:
+        self.dealer.hand.show_card()
+        self.view.refresh_view(self.player, self.dealer)
         if self.player.busted():
             self.dealer_wins()
         elif self.dealer.busted():
             self.player_wins()
-        elif self.player.hand.compareTo(self.dealer.hand) > 1:
+        elif self.player.hand > self.dealer.hand:
             self.player_wins()
-        elif self.player.hand.compareTo(self.dealer.hand) < 1:
+        elif self.player.hand < self.dealer.hand:
             self.dealer_wins()
-        else:
+        elif self.player.hand == self.dealer.hand:
             self.push()
+        else:
+            self.view.show_message("Something went wrong!")
         self.init_game()
 
     def start(self) -> None:
         self.view.mainloop()
 
     def new_game(self) -> None:
-        self.player.clear_hand()
-        self.dealer.clear_hand()
-        self.dealer.new_deck()
         self.dealer.hit(self.dealer.deal())
         self.player.hit(self.dealer.deal())
         self.dealer.hit(self.dealer.deal().flip())
         self.player.hit(self.dealer.deal())
-        self.view.update_game(self.player, self.dealer)
+        self.view.refresh_view(self.player, self.dealer)
+        if self.player.black_jack():
+            self.player_wins(bj=True)
 
-    def player_wins(self):
-        self.player.credit += self.player.bet * 2
-        self.view.show_message("You win!")
+    def player_wins(self, bj=False):
+        if bj:
+            self.player.credit += self.player.bet * 2.5
+            self.view.show_message("Black Jack!")
+        else:
+            self.player.credit += self.player.bet * 2
+            self.view.show_message("You win!")
 
     def dealer_wins(self):
+        self.player.credit -= self.player.bet
         self.view.show_message("Dealer wins!")
 
     def push(self):
@@ -66,8 +72,10 @@ class Controller:
 
     def player_bet(self, bet):
         self.player.bet = bet
-        self.player.credit -= bet
         self.new_game()
 
     def init_game(self):
-        self.view.update_game(self.player, self.dealer)
+        self.player.clear_hand()
+        self.dealer.clear_hand()
+        self.dealer.new_deck()
+        self.view.refresh_view(self.player, self.dealer)

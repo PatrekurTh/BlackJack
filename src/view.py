@@ -35,13 +35,37 @@ class View(Tk):
         self.resizable(False, False)
 
     def show_game(self):
+        """Show the game view"""
         self.game.tkraise()
 
-    def show_menu(self):
+    def show_menu(self) -> None:
+        """Show the menu view"""
         self.menu.tkraise()
 
-    def update_game(self, player, dealer):
-        self.game.update_game(player, dealer)
+    def refresh_view(self, player, dealer) -> None:
+        """Refresh the game view"""
+        self.game.refresh_view(player, dealer)
 
-    def show_message(self, message):
+    def show_message(self, message) -> None:
+        """Popup message box with the given message
+
+        Args:
+            message (str): message to show
+        """
         messagebox.showinfo("", message)
+
+    def delay(self, seconds) -> None:
+        """Delay the UI for a given amount of seconds
+
+        This is a blocking function, so it will not return until the delay is over
+
+        Args:
+            seconds (int): delay in seconds
+        """
+        try:
+            time: int = seconds * 1000
+            resume: BooleanVar = BooleanVar(value=False)
+            self.after(time, lambda: resume.set(True))
+            self.wait_variable(resume)
+        except:
+            pass

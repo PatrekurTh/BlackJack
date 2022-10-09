@@ -6,8 +6,9 @@ class Game(ttk.Frame):
     def __init__(self, root, controller):
         super().__init__(root)
         self.controller = controller
+        self.root = root
 
-        # dealer
+        # dealer frame
         dealer_fr = Frame(self, bg="green")
         dealer_fr.grid(row=0, column=0, sticky="nsew")
         dealer_fr.rowconfigure(0, weight=1)
@@ -22,7 +23,7 @@ class Game(ttk.Frame):
         self.dealer_hand_fr = Frame(dealer_fr, bg="green")
         self.dealer_hand_fr.grid(row=0, column=0, sticky="nsew")
 
-        # player
+        # player frame
         player_fr = Frame(self, bg="blue")
         player_fr.grid(row=1, column=0, sticky="nsew")
         player_fr.rowconfigure(0, weight=1)
@@ -49,14 +50,17 @@ class Game(ttk.Frame):
         ttk.Button(player_fr, text="Bet",
                    command=self.bet).grid(row=1, column=2)
 
-    def update_game(self, player, dealer) -> None:
-        # clear hands
+    def refresh_view(self, player, dealer):
+        self.update_player(player)
+        # self.root.delay(1) # TODO work this out
+        self.update_dealer(dealer)
+
+    def update_player(self, player):
         for widget in self.player_hand_fr.winfo_children():
             widget.destroy()
-        for widget in self.dealer_hand_fr.winfo_children():
-            widget.destroy()
+        self.player_hand_value.set(player.hand.value)
+        self.player_credit.set(player.credit)
 
-        # update hands
         for i, card in enumerate(player.hand):
             img = PhotoImage(file=card.get_image_path())
             l = ttk.Label(self.player_hand_fr, image=img)
@@ -64,18 +68,18 @@ class Game(ttk.Frame):
             l.image = img
             l.grid(row=0, column=i)
 
+    def update_dealer(self, dealer):
+        for widget in self.dealer_hand_fr.winfo_children():
+            widget.destroy()
+        self.dealer_hand_value.set(
+            sum([card.value for card in dealer.hand if not card.hidden]))
+
         for i, card in enumerate(dealer.hand):
             img = PhotoImage(file=card.get_image_path())
             l = ttk.Label(self.dealer_hand_fr, image=img)
             # for some reason tkinter garbage collects the image if we don't do this
             l.image = img
             l.grid(row=0, column=i)
-
-        # update hand values
-        self.player_hand_value.set(player.hand.value)
-        self.dealer_hand_value.set(
-            sum([card.value for card in dealer.hand if not card.hidden]))
-        self.player_credit.set(self.controller.player.credit)
 
     def hit(self):
         self.controller.player_hit()

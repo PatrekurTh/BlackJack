@@ -1,9 +1,10 @@
+from src.models.player import Player
 from src.models.hand import Hand
 from src.models.card import Card
 from src.models.deck import Deck
 
 
-class Dealer:
+class Dealer(Player):
     def __init__(self) -> None:
         self.deck: Deck = Deck()
         self.hand: Hand = Hand()
@@ -14,12 +15,3 @@ class Dealer:
 
     def deal(self) -> Card:
         return self.deck.draw_card()
-
-    def hit(self, card: Card) -> None:
-        self.hand.add(card)
-
-    def clear_hand(self) -> None:
-        self.hand.clear()
-
-    def busted(self):
-        return self.hand.value > 21
