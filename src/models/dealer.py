@@ -15,3 +15,6 @@ class Dealer(Player):
 
     def deal(self) -> Card:
         return self.deck.draw_card()
+
+    def show_card(self) -> None:
+        self.hand.flip_cards()

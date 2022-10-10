@@ -42,9 +42,15 @@ class View(Tk):
         """Show the menu view"""
         self.menu.tkraise()
 
-    def refresh_view(self, player, dealer) -> None:
-        """Refresh the game view"""
-        self.game.refresh_view(player, dealer)
+    def refresh_view(self, player, dealer, dealer_animation=False) -> None:
+        """Update the view
+
+        Args:
+            player (Player): the player model
+            dealer (Dealer): the dealer model
+            dealer_animation (bool, optional): if the dealer should animate his moves. Defaults to False.
+        """
+        self.game.refresh_view(player, dealer, dealer_animation)
 
     def show_message(self, message) -> None:
         """Popup message box with the given message

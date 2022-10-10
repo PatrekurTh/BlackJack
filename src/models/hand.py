@@ -9,16 +9,30 @@ class Hand:
 
     def add(self, card) -> None:
         self.hand.append(card)
-        self.value += card.value
+        if not card.hidden:
+            self.value += card.value
+        if self.value > 21:
+            if self.ace():
+                self.value -= 10
+
+    def get_value(self):
+        return self.value
+
+    def ace(self) -> bool:
+        for card in self.hand:
+            if card.rank == "A":
+                return True
+        return False
 
     def clear(self) -> None:
         self.hand = []
         self.value = 0
 
-    def show_card(self) -> None:
+    def flip_cards(self) -> None:
         for card in self.hand:
             if card.hidden:
                 card.flip()
+                self.value += card.value
 
     def __lt__(self, other):
         return self.value < other.value

@@ -19,16 +19,18 @@ class Controller:
             self.end_round()
 
     def player_stand(self) -> None:
-        self.dealer.hand.show_card()
-        self.view.refresh_view(self.player, self.dealer)
-        while (self.dealer.hand.value < 17):
+        self.dealer.show_card()
+        self.view.refresh_view(self.player, self.dealer, dealer_animation=True)
+        while (self.dealer.get_hand_value() < 17):
+            print(self.dealer.get_hand_value())
             self.dealer.hit(self.dealer.deal())
-            self.view.refresh_view(self.player, self.dealer)
+            self.view.refresh_view(
+                self.player, self.dealer, dealer_animation=True)
         self.end_round()
 
     def end_round(self) -> None:
-        self.dealer.hand.show_card()
-        self.view.refresh_view(self.player, self.dealer)
+        self.dealer.show_card()
+        self.view.refresh_view(self.player, self.dealer, dealer_animation=True)
         if self.player.busted():
             self.dealer_wins()
         elif self.dealer.busted():
@@ -39,6 +41,8 @@ class Controller:
             self.dealer_wins()
         elif self.player.hand == self.dealer.hand:
             self.push()
+        elif self.player.black_jack():
+            self.player_wins(bj=True)
         else:
             self.view.show_message("Something went wrong!")
         self.init_game()
@@ -51,9 +55,9 @@ class Controller:
         self.player.hit(self.dealer.deal())
         self.dealer.hit(self.dealer.deal().flip())
         self.player.hit(self.dealer.deal())
-        self.view.refresh_view(self.player, self.dealer)
+        self.view.refresh_view(self.player, self.dealer, dealer_animation=True)
         if self.player.black_jack():
-            self.player_wins(bj=True)
+            self.end_round()
 
     def player_wins(self, bj=False):
         if bj:
@@ -64,13 +68,13 @@ class Controller:
             self.view.show_message("You win!")
 
     def dealer_wins(self):
-        self.player.credit -= self.player.bet
         self.view.show_message("Dealer wins!")
 
     def push(self):
         self.view.show_message("Push!")
 
     def player_bet(self, bet):
+        self.player.credit -= bet
         self.player.bet = bet
         self.new_game()
 
@@ -78,4 +82,4 @@ class Controller:
         self.player.clear_hand()
         self.dealer.clear_hand()
         self.dealer.new_deck()
-        self.view.refresh_view(self.player, self.dealer)
+        self.view.refresh_view(self.player, self.dealer, dealer_animation=True)

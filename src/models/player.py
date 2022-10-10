@@ -17,7 +17,10 @@ class Player:
         self.hand.clear()
 
     def busted(self):
-        return self.hand.value > 21
+        return self.hand.get_value() > 21
 
     def black_jack(self):
-        return self.hand.value == 21 and len(self.hand) == 2
+        return self.hand.get_value() == 21 and len(self.hand) == 2
+
+    def get_hand_value(self):
+        return self.hand.get_value()
